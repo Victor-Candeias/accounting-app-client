@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "chrome", // ou "edge" para Microsoft Edge
+        "request": "launch",
+        "name": "Launch Chrome against localhost",
+        "url": "http://localhost:3000", // URL padrão do React
+        "webRoot": "${workspaceFolder}/src",
+        "preLaunchTask": "npm: start" // Isso executa o npm start antes de iniciar o navegador
+      }
+    ]
+  }
+  

@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "npm: start",
+        "type": "npm",
+        "script": "start",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": [],
+        "detail": "Executa o npm start para iniciar a aplicação React"
+      }
+    ]
+  }
+  
