@@ -1,0 +1,76 @@
+.container-input-data {
+    flex: 1; /* Take up equal width */
+    display: flex;
+    flex-direction: row;
+    background-color: transparent;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.left-input-data {
+    background-color: transparent;
+    margin: 4px;
+    border-radius: 5px;
+    flex: 0 0 25%;
+}
+
+.left-input-data-finish {
+    background-color: transparent;
+    margin: 4px;
+    border-radius: 5px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-label {
+    border-radius: 3px;
+    width: 100%;
+    padding-top: 10px;
+    margin-left: 10px;
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+.input-input {
+    border-radius: 3px;
+    width: 90%;
+    padding: 0;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    margin: -7px 10px 0 10px;
+    font-size: large;
+    border-width: 1px;
+    outline: none;
+    border: none;
+    height: 40px;
+}
+
+.input-input-description {
+    text-align: left !important; 
+}
+
+.input-input-amount {
+    text-align: right !important; 
+}
+
+.input-button {
+    border-radius: 5px;
+    border-width: 1px;
+    background-color: rgb(79, 79, 255);
+    width: 150px;
+    padding: 0;
+    font-size: 0.9rem;
+    margin: 0 10px 10px 10px;
+    font-size: large;
+    color: white;
+    padding: 10px;
+    outline: none;
+    border: none;
+}
+
+.input-radio {
+    margin-left: 10px;
+    padding-left: 10px;
+}
