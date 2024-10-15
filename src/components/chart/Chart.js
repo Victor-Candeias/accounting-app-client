@@ -11,6 +11,8 @@ import {
   Legend,
 } from "chart.js";
 
+import "./chart.css";
+
 // Register the necessary chart components
 ChartJS.register(
   CategoryScale,
@@ -22,86 +24,31 @@ ChartJS.register(
   Legend
 );
 
-const LineChart = ({selectedMonth, selectedYear}) => {
-  const initialValue = 15000; // Initial value of 1500
+const LineChart = ({ dataValues }) => {
+  if (!dataValues[0] || !dataValues[0].value) {
+    return <div className="div" >No data available!</div>
+  }
 
-  // Your data
-  const dataValues = [
-    {
-      date: "25-10-2024 10:00",
-      description: "Entrada 1",
-      value: 10000,
-      type: "Credit",
-      id: 1,
-    },
-    {
-      date: "25-10-2024 10:10",
-      description: "Entrada 2",
-      value: 23488,
-      type: "Debit",
-      id: 2,
-    },
-    {
-      date: "25-10-2024 11:00",
-      description: "Entrada 1",
-      value: 10000,
-      type: "Credit",
-      id: 3,
-    },
-    {
-      date: "25-10-2024 11:30",
-      description: "Entrada 2",
-      value: 23488,
-      type: "Debit",
-      id: 4,
-    },
-    {
-      date: "25-10-2024 12:00",
-      description: "Entrada 1",
-      value: 10000,
-      type: "Credit",
-      id: 5,
-    },
-    {
-      date: "25-10-2024 13:00",
-      description: "Entrada 2",
-      value: 23488,
-      type: "Debit",
-      id: 6,
-    },
-    {
-      date: "25-10-2024 15:00",
-      description: "Entrada 1",
-      value: 10000,
-      type: "Credit",
-      id: 7,
-    },
-    {
-      date: "25-10-2024 17:00",
-      description: "Entrada 2",
-      value: 23488,
-      type: "Debit",
-      id: 8,
-    },
-  ];
-  // Calculate the values over time starting with the initial value
-  let runningTotal = initialValue / 100; // Initialize with the starting value
-  const calculatedValues = dataValues.map((item) => {
-    if (item.type === "Credit") {
-      runningTotal += item.value / 100; // Add if it's an "Entrada"
-    } else if (item.type === "Debit") {
-      runningTotal -= item.value / 100; // Subtract if it's a "Saída"
+  // Initialize with the starting value (convert to the correct format)
+  let runningTotal = dataValues[0].value / 100;
+
+  // Calculate the running total over time based on entry type
+  const calculatedValues = dataValues.slice(1).map((item) => {
+    if (item.entry === "credit") {
+      runningTotal += parseFloat(item.value) / 100; // Add credit
+    } else if (item.entry === "debit") {
+      runningTotal -= parseFloat(item.value) / 100; // Subtract debit
     }
-    return runningTotal; // Return the running total for each point
+    return runningTotal;
   });
 
-  // Prepare data for chart
+  // Prepare chart data
   const chartData = {
-    labels: dataValues.map((item) => item.date), // Extract the 'date' for labels
+    labels: dataValues.map((item) => `${item.day}/${item.month}/${item.year}`), // X-axis labels
     datasets: [
       {
-        label: `Balanço do mês: ${selectedMonth} do ano ${selectedYear}`,
-        data: calculatedValues, // Use calculated values for the line chart
+        label: `Balanço do mês: outubro do ano 2024`,
+        data: [dataValues[0].value / 100, ...calculatedValues], // Include initial value
         fill: false,
         borderColor: "rgba(75, 192, 192, 1)", // Line color
         tension: 0.1, // Smoothness of the line
@@ -109,23 +56,31 @@ const LineChart = ({selectedMonth, selectedYear}) => {
     ],
   };
 
-  // Chart options (optional)
+  // Find the min and max values to adjust y-axis scaling dynamically
+  const minValue = Math.min(dataValues[0].value / 100, ...calculatedValues);
+  const maxValue = Math.max(dataValues[0].value / 100, ...calculatedValues);
+
+  // Chart options
   const options = {
     responsive: true,
     scales: {
       y: {
-        beginAtZero: false, // Start y-axis based on minimum value in the data
+        suggestedMin: minValue - 0.1 * Math.abs(minValue), // Add some padding below min
+        suggestedMax: maxValue + 0.1 * Math.abs(maxValue), // Add some padding above max
         ticks: {
           callback: (value) => {
-            // Format y-axis tick values
-            return `€ ${value.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            // Format y-axis values with currency symbol
+            return `€ ${value.toLocaleString("pt-PT", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`;
           },
         },
       },
       x: {
         ticks: {
-          autoSkip: true, // Auto skip labels if there are too many
-          maxRotation: 90, // Rotate labels if needed
+          autoSkip: true, // Skip labels if too many
+          maxRotation: 90, // Rotate labels for better readability
           minRotation: 45,
         },
       },
@@ -137,7 +92,7 @@ const LineChart = ({selectedMonth, selectedYear}) => {
             // Format tooltip values with Euro symbol
             return `${context.dataset.label}: €${context.raw.toLocaleString(
               "pt-PT",
-              { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+              { style: "currency", currency: "EUR" }
             )}`;
           },
         },
@@ -145,7 +100,7 @@ const LineChart = ({selectedMonth, selectedYear}) => {
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return <Line className="div" data={chartData} options={options} />;
 };
 
 export default LineChart;

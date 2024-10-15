@@ -182,7 +182,15 @@ const AccountingApp = () => {
           )}
         </div>
         <div className="bottom-right">
-          <Chart selectedMonth={selectedMonth} selectedYear={selectedYear} />
+          {loading ? (
+            <p>Loading data...</p> // Show loading text
+          ) : (
+            <Chart
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
+              dataValues={data}
+            />
+          )}
         </div>
       </div>
     </div>

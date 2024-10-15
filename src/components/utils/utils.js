@@ -1,14 +1,8 @@
-import React, { useState } from "react";
-
 export const TOKEN_KEY = "token";
-
 export const LAST_ACTIVITY_KEY = "lastActivity";
-
 export const LOCATION = "pt-PT";
-
 export const DEFAULT_AUTO_LOGOUT_TIMEOUT = 300000;
-
-export const DEFAULT_API_URL = "http://localhost:3001/api";
+export const DEFAULT_API_URL = "http://192.168.1.92:3001/api";
 
 /**
  * Get month name from current location
@@ -94,4 +88,10 @@ export const formatCurrency = (inputValue = "0,00") => {
   const formattedValue = numericValue.replace(".", ",");
 
   return formattedValue;
+};
+
+export const validatePassword = (password) => {
+  const complexityRules =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return complexityRules.test(password);
 };
