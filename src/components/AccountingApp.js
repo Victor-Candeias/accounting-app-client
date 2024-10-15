@@ -34,7 +34,6 @@ const AccountingApp = () => {
 
   // Fetch data based on selected month and year
   const fetchData = async () => {
-    setLoading(true); // Set loading to true while fetching data
     try {
       const url = `${DEFAULT_API_URL}/data`;
       const user = GetUserToSessionStorage();
@@ -80,6 +79,7 @@ const AccountingApp = () => {
 
   // Call fetchData on mount and when selectedMonth or selectedYear changes
   useEffect(() => {
+    setLoading(true); // Set loading to true while fetching data
     fetchData();
   }, [selectedMonth, selectedYear]); // Dependencies changed to update on month/year change
 
