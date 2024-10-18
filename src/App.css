@@ -6,7 +6,7 @@ html, body {
 }
 
 .container {
-    display: flexbox;
+    display: flex; /* Changed from flexbox to flex */
     flex-direction: column;
     height: 100vh;
     background-color: white;
