@@ -1,0 +1,73 @@
+/* Style the top navigation bar */
+.topnav {
+    height: 10%; /* 10% of the viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between items */
+    padding: 0 20px; /* Add some padding */
+}
+
+.topnav-python {
+    background-color: rgb(5, 114, 99);
+}
+
+.topnav-nodejs {
+    background-color: rgb(99, 9, 69);
+}
+
+/* Center content */
+.center-content {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center items horizontally */
+    flex-grow: 1; /* Allow this section to grow */
+}
+
+/* New search container to group label and input */
+.search-container {
+    display: flex;
+    align-items: center; /* Align label and input vertically */
+}
+
+/* Style the topnav links */
+.topnav a {
+    float: left; 
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change color on hover */
+.topnav a:hover {
+    color: black;
+}
+
+.navbar-label {
+    margin: 0 10px; /* Adjusted margin for spacing */
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+.search {
+    margin: 0 10px; /* Adjusted margin for spacing */
+    height: 40px;
+    border-radius: 5px;
+    width: 250px;
+    outline: none;
+}
+
+.navbar-button {
+    color: white;
+    background-color: rgb(79, 79, 255);
+    width: 150px;
+    border-radius: 5px;
+    height: 40px;
+}
+
+.app-title {
+    font-style: italic;
+}

@@ -1,0 +1,102 @@
+/* Style the tab buttons */
+.container-menu {
+    display: flexbox;
+    flex-direction: row;
+    height: 100vh;
+    background-color: transparent;
+}
+
+.bottom-top {
+    background-color: transparent;
+    height: auto; /* 20% of the container's height */
+    display: flex; /* Enable flexbox */
+    justify-content: space-between; /* Space between the columns */
+    flex-grow: 1; /* Takes up the remaining height 3B82F6*/
+    display: flex;
+    overflow-y: hidden; /* No scroll for the bottom section itself */
+}
+
+.botton-top-backgroung-python {
+    background: linear-gradient(to bottom, rgb(5, 114, 99) 50%, transparent 50%); /**/
+}
+
+.botton-top-backgroung-nodejs {
+    background: linear-gradient(to bottom,  rgb(99, 9, 69) 50%, transparent 50%); /**/
+}
+
+.bottom-top-div {
+    flex: 1; /* Equal width for each column */
+    margin: 10px; /* Space between columns */
+    background-color: white; /* Just to visualize */
+    padding: 2px;
+    border-radius: 4px;
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Adds a shadow */
+}
+
+
+.bottom-top-left {
+    background-color: rgb(247, 244, 244);
+    display: flex;
+    flex-direction: column; 
+    padding: 0;
+    margin: 10px;
+    border-radius: 5px;
+    justify-content: center; 
+    align-items: center; 
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Adds a shadow */
+}
+
+.bottom-top-right {
+    flex: 1;
+}
+
+.bottom-top-x {
+    flex: 0 0 33%; 
+}
+
+
+.bottom-middle {
+    background-color: rgb(247, 244, 244);
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Adds a shadow */
+}
+
+.bottom-bottom {
+    background-color: rgb(247, 244, 244);
+    height: 50%;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Adds a shadow */
+    margin-left: 10px;
+    margin-right: 10px;
+
+    flex-grow: 1; /* Takes up the remaining height */
+    display: flex;
+    overflow-y: hidden; /* No scroll for the bottom section itself */
+}
+
+.bottom-left {
+    background-color: transparent;
+    flex: 0 0 60%; /* Left section takes 65% of the width */
+    display: flex;
+    flex-direction: column; /* Vertically split */
+    padding: 0;
+    margin: 4px;
+    border-radius: 5px;
+}
+
+.bottom-right {
+    background-color: transparent;
+    flex: 1; /* Right section takes the remaining width (35%) */
+    padding: 20px;
+    overflow-y: auto; /* Scroll if content exceeds height */
+    margin: 4px;
+    border-radius: 5px;
+}

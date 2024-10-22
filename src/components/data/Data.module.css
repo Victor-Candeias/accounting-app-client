@@ -1,0 +1,28 @@
+.table-container {
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px lightgray solid;
+    border-radius: 5px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.td, .th {
+    width: 25%;
+    border: 1px lightgray solid;
+    border-radius: 5px;
+}
+
+.th {
+    border: 1px lightgray solid;
+    border-radius: 5px;
+    background-color: gray;
+    color: white;
+}
+
+.align-center {
+    align-content: center;
+    margin-left: 50px;
+}

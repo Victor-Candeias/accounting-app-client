@@ -1,0 +1,36 @@
+
+.container-table {
+    width: 100%;
+    max-height: 300px;
+}
+
+.container-table-td {
+    width: 50%;
+    background-color: transparent;
+}
+
+.container-resume {
+    display: flex;
+    padding: 15px;
+}
+
+.fixed-label {
+    width: 300px;
+    background-color: transparent;
+    font-size: 1rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+.flex-icon {
+    background-color: transparent;
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.container-amount {
+    text-align: center;
+    font-size: 1.7rem;
+    margin-right: 10px;
+}

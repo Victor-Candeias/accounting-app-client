@@ -1,0 +1,14 @@
+.options-year {
+    margin: 10px; /* Adjusted margin for spacing */
+    height: 40px;
+    border-radius: 5px;
+    width: 250px;
+    font-size: 16px;
+    outline: none;
+    border: none;
+}
+
+.options-year:focus {
+    outline: none;
+    border: none;
+  }
