@@ -4,9 +4,26 @@ import CreditIcon from "../../assets/icons/credit.png";
 import DebitIcon from "../../assets/icons/debit.png";
 import { numberToMonth } from "../utils/utils";
 
+/**
+ * @module components.data.Data
+ */
+/**
+ * Data component renders a table displaying transaction information, 
+ * including the date, description, value, type (credit or debit), and actions (delete).
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Array} props.data - Array of transaction data objects
+ * @param {Function} props.onDeleteEntry - Callback function to handle the deletion of an entry
+ * @returns {JSX.Element} JSX for rendering the transaction table
+ */
 const Data = ({ data, onDeleteEntry }) => {
+  /**
+   * Handles the deletion of an entry by invoking the onDeleteEntry callback.
+   * 
+   * @param {string} id - The ID of the entry to be deleted
+   */
   const handleDelete = (id) => {
-    // call delete
     onDeleteEntry(id);
   };
 

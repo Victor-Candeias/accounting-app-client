@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/utils/AutoLogout.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/utils/AutoLogout.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  AddSessionStorageItem,
+  GetSessionStorageItem,
+  RemoveSessionItem,
+  TOKEN_KEY,
+  LAST_ACTIVITY_KEY,
+} from "../utils/utils";
+
+/**
+ * @namespace components
+ */
+
+/**
+ * @group utils
+ */
+/**
+ * AutoLogout component handles user session management by automatically logging out 
+ * the user after a specified timeout due to inactivity.
+ * 
+ * @memberof components.AutoLogout
+ * @param {Object} props - The props object.
+ * @param {number} [props.timeout=300000] - The timeout duration in milliseconds 
+ *                                            after which the user will be logged out 
+ *                                            due to inactivity. Default is 300000ms (5 minutes).
+ * @returns {null} Returns null as it does not render anything.
+ */
+const AutoLogout = ({ timeout = 300000 }) => {
+  const navigate = useNavigate();
+
+  /**
+   * Updates the last activity timestamp in session storage.
+   */
+  const updateLastActivity = () => {
+    const currentTime = Date.now();
+    AddSessionStorageItem(LAST_ACTIVITY_KEY, currentTime.toString());
+  };
+
+  /**
+   * Logs out the user by removing the token from session storage and 
+   * redirecting to the login page.
+   */
+  const handleLogout = () => {
+    RemoveSessionItem(TOKEN_KEY);
+    navigate("/login"); // Redirect to login
+  };
+
+  useEffect(() => {
+    /**
+     * Checks the last activity timestamp and logs out the user 
+     * if the timeout period has been exceeded.
+     */
+    const checkLastActivity = () => {
+      const storedLastActivity = GetSessionStorageItem(LAST_ACTIVITY_KEY);
+      if (
+        storedLastActivity &amp;&amp;
+        Date.now() - parseInt(storedLastActivity) > timeout
+      ) {
+        handleLogout(); // Log out immediately if the last activity exceeds the timeout
+      }
+    };
+
+    // Initial check
+    checkLastActivity();
+
+    // Set up an interval to check the last activity
+    const interval = setInterval(checkLastActivity, 1000); // Check every second
+
+    // Unified event listener for user activity
+    const handleUserActivity = () => {
+      updateLastActivity();
+    };
+
+    // Add event listener for user activity
+    window.addEventListener("mousemove", handleUserActivity);
+    window.addEventListener("keydown", handleUserActivity);
+    window.addEventListener("scroll", handleUserActivity);
+    window.addEventListener("click", handleUserActivity);
+
+    // Clean up on unmount
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("mousemove", handleUserActivity);
+      window.removeEventListener("keydown", handleUserActivity);
+      window.removeEventListener("scroll", handleUserActivity);
+      window.removeEventListener("click", handleUserActivity);
+    };
+  }, [timeout, navigate]);
+
+  return null;
+};
+
+export default AutoLogout;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="components.chart.module_Chart.html">Chart</a></li><li><a href="components.data.module_Data.html">Data</a></li><li><a href="components.inputData.module_CurrencyInput.html">CurrencyInput</a></li><li><a href="components.login.module_Login.html">Login</a></li><li><a href="components.login.module_LoginNaveBar.html">LoginNaveBar</a></li><li><a href="components.login.module_Register.html">Register</a></li><li><a href="components.module_AccountingApp.html">AccountingApp</a></li><li><a href="components.month.module_Month.html">Month</a></li><li><a href="components.nav-bar.module_NaveBar.html">NaveBar</a></li><li><a href="components.passwordStrengthChecker.module_PasswordStrengthChecker.html">PasswordStrengthChecker</a></li><li><a href="components.resume.module_Resume.html">Resume</a></li><li><a href="components.year.module_Year.html">Year</a></li><li><a href="module-App.html">App</a></li></ul><h3>Namespaces</h3><ul><li><a href="components.html">components</a></li></ul><h3>Global</h3><ul><li><a href="global.html#PrivateRoute">PrivateRoute</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#rootElement">rootElement</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Wed Oct 23 2024 16:54:27 GMT+0100 (Hora de verão da Europa Ocidental)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

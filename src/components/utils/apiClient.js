@@ -2,7 +2,18 @@
 import axios from "axios";
 import { TOKEN_KEY, GetSessionStorageItem } from "./utils";
 
-// Define a simple enum-like object for HTTP methods
+/**
+ * @namespace components
+ */
+
+/**
+ * @group utils
+ */
+/**
+ * @memberof components.apiClient
+ * @enum {string}
+ * Enum-like object for HTTP methods.
+ */
 export const HttpMethod = {
   GET: "get",
   POST: "post",
@@ -11,7 +22,20 @@ export const HttpMethod = {
   PATCH: "patch",
 };
 
-// Utility function for handling axios requests
+/**
+ * Utility function for handling axios requests.
+ *
+ * @memberof components.makeRequest
+ * @param {string} method - The HTTP method to use for the request. Must be one of 
+ *                          the values defined in HttpMethod.
+ * @param {string} url - The URL to which the request is sent.
+ * @param {Object|null} [data=null] - The data to be sent as the request body, 
+ *                                     applicable for POST requests. Default is null.
+ * @param {Object|null} [params=null] - The query parameters to be sent with the 
+ *                                       request, applicable for GET requests. Default is null.
+ * @returns {Promise<Object>} The response data from the request.
+ * @throws {Error} Throws an error if the HTTP method is invalid or if the request fails.
+ */
 export default async function makeRequest(
   method,
   url,

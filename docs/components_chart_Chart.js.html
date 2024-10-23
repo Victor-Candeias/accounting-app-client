@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/chart/Chart.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/chart/Chart.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { numberToMonth } from "../utils/utils";
+import classes from "./chart.module.css";
+
+// Register the necessary chart components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+/**
+ * @module components.chart.Chart
+ */
+/**
+ * LineChart component renders a line chart displaying the running balance
+ * of a financial account over time. It dynamically calculates the balance 
+ * based on credits and debits provided in the `dataValues` prop.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Array} props.dataValues - Array of objects representing transactions with fields: day, month, year, value, and entry (either 'credit' or 'debit')
+ * @returns {JSX.Element} JSX for rendering the line chart or a message if no data is available
+ */
+const LineChart = ({ dataValues }) => {
+  // Return a message if there is no data to display
+  if (!dataValues[0] || !dataValues[0].value) {
+    return &lt;div className="div">No data available!&lt;/div>;
+  }
+
+  // Initialize with the starting value (convert to the correct format)
+  let runningTotal = dataValues[0].value / 100;
+
+  // Calculate the running total over time based on entry type (credit or debit)
+  const calculatedValues = dataValues.slice(1).map((item) => {
+    if (item.entry === "credit") {
+      runningTotal += parseFloat(item.value) / 100; // Add credit
+    } else if (item.entry === "debit") {
+      runningTotal -= parseFloat(item.value) / 100; // Subtract debit
+    }
+    return runningTotal;
+  });
+
+  // Prepare chart data with X-axis labels and Y-axis values
+  const chartData = {
+    labels: dataValues.map((item) => `${item.day}/${numberToMonth(item.month)}/${item.year}`), // X-axis labels
+    datasets: [
+      {
+        label: `Balanço do mês: outubro do ano 2024`,
+        data: [dataValues[0].value / 100, ...calculatedValues], // Include initial value
+        fill: false,
+        borderColor: "rgba(75, 192, 192, 1)", // Line color
+        tension: 0.1, // Smoothness of the line
+      },
+    ],
+  };
+
+  // Find the min and max values to adjust y-axis scaling dynamically
+  const minValue = Math.min(dataValues[0].value / 100, ...calculatedValues);
+  const maxValue = Math.max(dataValues[0].value / 100, ...calculatedValues);
+
+  // Chart configuration options
+  const options = {
+    responsive: true,
+    scales: {
+      y: {
+        suggestedMin: minValue - 0.1 * Math.abs(minValue), // Add some padding below min value
+        suggestedMax: maxValue + 0.1 * Math.abs(maxValue), // Add some padding above max value
+        ticks: {
+          callback: (value) => {
+            // Format y-axis values with Euro symbol
+            return `€ ${value.toLocaleString("pt-PT", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`;
+          },
+        },
+      },
+      x: {
+        ticks: {
+          autoSkip: true, // Automatically skip labels if too many
+          maxRotation: 90, // Rotate labels for readability
+          minRotation: 45,
+        },
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            // Format tooltip values with Euro symbol
+            return `${context.dataset.label}: €${context.raw.toLocaleString(
+              "pt-PT",
+              { style: "currency", currency: "EUR" }
+            )}`;
+          },
+        },
+      },
+    },
+  };
+
+  // Render the Line chart component with provided data and options
+  return &lt;Line className={classes.div} data={chartData} options={options} />;
+};
+
+export default LineChart;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="components.chart.module_Chart.html">Chart</a></li><li><a href="components.data.module_Data.html">Data</a></li><li><a href="components.inputData.module_CurrencyInput.html">CurrencyInput</a></li><li><a href="components.login.module_Login.html">Login</a></li><li><a href="components.login.module_LoginNaveBar.html">LoginNaveBar</a></li><li><a href="components.login.module_Register.html">Register</a></li><li><a href="components.module_AccountingApp.html">AccountingApp</a></li><li><a href="components.month.module_Month.html">Month</a></li><li><a href="components.nav-bar.module_NaveBar.html">NaveBar</a></li><li><a href="components.passwordStrengthChecker.module_PasswordStrengthChecker.html">PasswordStrengthChecker</a></li><li><a href="components.resume.module_Resume.html">Resume</a></li><li><a href="components.year.module_Year.html">Year</a></li><li><a href="module-App.html">App</a></li></ul><h3>Namespaces</h3><ul><li><a href="components.html">components</a></li></ul><h3>Global</h3><ul><li><a href="global.html#PrivateRoute">PrivateRoute</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#rootElement">rootElement</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Wed Oct 23 2024 16:54:27 GMT+0100 (Hora de verão da Europa Ocidental)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

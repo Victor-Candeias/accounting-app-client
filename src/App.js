@@ -21,6 +21,9 @@ import AutoLogout from "./components/utils/AutoLogout";
 import { DEFAULT_AUTO_LOGOUT_TIMEOUT } from "./components/utils/utils";
 
 /**
+ * @module App
+ */
+/**
  * The main App component that sets up the router and routes for the application.
  *
  * This component wraps the application in a Router and defines the routes available,

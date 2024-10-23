@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/data/Data.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/data/Data.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import classes from "./Data.module.css";
+import Delete from "../../assets/icons/delete.png";
+import CreditIcon from "../../assets/icons/credit.png";
+import DebitIcon from "../../assets/icons/debit.png";
+import { numberToMonth } from "../utils/utils";
+
+/**
+ * @module components.data.Data
+ */
+/**
+ * Data component renders a table displaying transaction information, 
+ * including the date, description, value, type (credit or debit), and actions (delete).
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Array} props.data - Array of transaction data objects
+ * @param {Function} props.onDeleteEntry - Callback function to handle the deletion of an entry
+ * @returns {JSX.Element} JSX for rendering the transaction table
+ */
+const Data = ({ data, onDeleteEntry }) => {
+  /**
+   * Handles the deletion of an entry by invoking the onDeleteEntry callback.
+   * 
+   * @param {string} id - The ID of the entry to be deleted
+   */
+  const handleDelete = (id) => {
+    onDeleteEntry(id);
+  };
+
+  return (
+    &lt;div className={classes["table-container"]}>
+      &lt;table className={classes.table}>
+        &lt;thead>
+          &lt;tr>
+            &lt;th className={classes.th} scope="col">
+              Data
+            &lt;/th>
+            &lt;th className={classes.th} scope="col">
+              Descrição
+            &lt;/th>
+            &lt;th className={classes.th} scope="col">
+              Valor
+            &lt;/th>
+            &lt;th className={classes.th} scope="col">
+              Tipo
+            &lt;/th>
+            &lt;th className={classes.th} scope="col">
+              Ações
+            &lt;/th>
+          &lt;/tr>
+        &lt;/thead>
+        &lt;tbody>
+          {data &amp;&amp; data.length > 0 ? (
+            data.map((m) => (
+              &lt;tr key={m._id}>
+                &lt;td className={classes.td}>
+                  {m.day}-{numberToMonth(m.month)}-{m.year}
+                &lt;/td>
+                &lt;td className={classes.td}>{m.description}&lt;/td>
+                &lt;td className={classes.td} style={{ textAlign: "right" }}>
+                  {(m.value / 100).toLocaleString("pt-PT", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                &lt;/td>
+                &lt;td className={classes.td}>
+                  &lt;img
+                    className={classes["align-center"]}
+                    src={m.entry === "credit" ? CreditIcon : DebitIcon}
+                    alt={m.entry === "credit" ? "Credit entry" : "Debit entry"}
+                    width={25}
+                    height={25}
+                  />
+                &lt;/td>
+                &lt;td className={classes.td} id={m._id}>
+                  &lt;button
+                    onClick={() => handleDelete(m._id)}
+                    aria-label="Delete entry"
+                  >
+                    &lt;img src={Delete} alt="Delete" width={25} height={25} />
+                  &lt;/button>
+                &lt;/td>
+              &lt;/tr>
+            ))
+          ) : (
+            &lt;tr>
+              &lt;td colSpan={5} className={`${classes.td} text-center`}>
+                No data available.
+              &lt;/td>
+            &lt;/tr>
+          )}
+        &lt;/tbody>
+      &lt;/table>
+    &lt;/div>
+  );
+};
+
+export default Data;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="components.chart.module_Chart.html">Chart</a></li><li><a href="components.data.module_Data.html">Data</a></li><li><a href="components.inputData.module_CurrencyInput.html">CurrencyInput</a></li><li><a href="components.login.module_Login.html">Login</a></li><li><a href="components.login.module_LoginNaveBar.html">LoginNaveBar</a></li><li><a href="components.login.module_Register.html">Register</a></li><li><a href="components.module_AccountingApp.html">AccountingApp</a></li><li><a href="components.month.module_Month.html">Month</a></li><li><a href="components.nav-bar.module_NaveBar.html">NaveBar</a></li><li><a href="components.passwordStrengthChecker.module_PasswordStrengthChecker.html">PasswordStrengthChecker</a></li><li><a href="components.resume.module_Resume.html">Resume</a></li><li><a href="components.year.module_Year.html">Year</a></li><li><a href="module-App.html">App</a></li></ul><h3>Namespaces</h3><ul><li><a href="components.html">components</a></li></ul><h3>Global</h3><ul><li><a href="global.html#PrivateRoute">PrivateRoute</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#rootElement">rootElement</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Wed Oct 23 2024 16:54:27 GMT+0100 (Hora de verão da Europa Ocidental)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

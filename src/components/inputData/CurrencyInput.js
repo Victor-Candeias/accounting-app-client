@@ -2,28 +2,52 @@ import React from "react";
 import classes from "./InputData.module.css";
 import { formatCurrency } from "../utils/utils";
 
+/**
+ * @module components.inputData.CurrencyInput
+ */
+/**
+ * CurrencyInput component for handling user input of currency values.
+ * 
+ * This component allows users to input a currency value. It removes non-numeric characters,
+ * formats the value on blur, and updates the parent component's state using the `handleInputChange` callback.
+ * 
+ * @component
+ * @param {Object} props - Component props
+ * @param {Function} props.handleInputChange - Function to handle the change and send the formatted value to the parent component.
+ * @returns {JSX.Element} JSX for the currency input field
+ */
 const CurrencyInput = ({ handleInputChange }) => {
-  // Handle raw input changes
+  /**
+   * Handles raw input changes to restrict non-numeric characters except for backspace and delete.
+   * 
+   * @param {Event} e - Input change event
+   */
   const handleChange = (e) => {
-    // Remove all non-numeric characters except decimal point and handle input normally
-    // 0 = 48 -> 9 = 57 -> backspace = 8 -> delete = 46
+    // Allow numeric inputs (0-9), backspace (8), and delete (46)
     if (
       (e.keyCode >= 48 && e.keyCode <= 57) ||
       e.keyCode === 8 ||
       e.keyCode === 46
     ) {
-      // do nothing
+      // Allow valid key presses
     } else {
-      e.keyCode = "\0";
+      e.keyCode = "\0"; // Prevent invalid key presses
     }
   };
 
+  /**
+   * Handles the input blur event to format the value as currency when the field loses focus.
+   * 
+   * @param {Event} e - Blur event
+   */
   const handleBlur = (e) => {
-    // Formata o valor quando o campo perde o foco
+    // Remove commas and prepare raw value for formatting
     const rawValue = e.target.value.replace(",", "");
 
+    // Format the raw value as currency
     const formattedValue = formatCurrency(rawValue);
 
+    // Pass the formatted value to the parent component via callback
     handleInputChange(formattedValue);
   };
 
@@ -32,12 +56,10 @@ const CurrencyInput = ({ handleInputChange }) => {
       <input
         className={`${classes["input-input"]} ${classes["input-input-amount"]}`}
         type="text"
-        //value={formatCurrency(value)}  Display formatted value
-        // Handle raw input on change onChange={handleChange}
-        // value={value} Mantém o valor atual no estado
-        onChange={handleChange} // Atualiza o estado enquanto digita
-        onBlur={handleBlur} // Formata o valor ao perder o foco
-        placeholder="Enter amount"
+        // Handle raw input change and value formatting
+        onChange={handleChange} // Handle input typing
+        onBlur={handleBlur} // Format the value on blur (focus loss)
+        placeholder="Enter amount" // Placeholder for the input field
       />
     </>
   );

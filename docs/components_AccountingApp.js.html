@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/AccountingApp.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/AccountingApp.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module components.AccountingApp
+ */
+/**
+ * AccountingApp Component
+ *
+ * This component manages the accounting data for the user.
+ * It allows users to view, input, and manage their credit and debit transactions.
+ * It fetches data from an API based on the selected month and year and displays
+ * the total credits, debits, and overall total.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered AccountingApp component.
+ *
+ * @example
+ * &lt;AccountingApp />
+ */
+
+import { useNavigate } from "react-router-dom"; // Hook for navigation
+import classes from "./AccountingApp.module.css";
+import Resume from "./resume/Resume"; // Component to display summary information
+import InputData from "./inputData/InputData"; // Component for inputting data
+import Data from "./data/Data"; // Component for displaying data entries
+import Chart from "./chart/Chart"; // Component for displaying chart visualizations
+import Credit from "../assets/icons/credit.png"; // Credit icon
+import Debit from "../assets/icons/debit.png"; // Debit icon
+import Total from "../assets/icons/total.png"; // Total icon
+import NavBar from "./nav-bar/NavBar"; // Navigation bar component
+import { useState, useEffect } from "react"; // React hooks for state and lifecycle management
+import {
+  GetMonthName,
+  GetYearName,
+  GetUserToSessionStorage,
+  DeleteUserToSessionStorage,
+  monthToNumber,
+} from "./utils/utils"; // Utility functions for API and session management
+import makeRequest, { HttpMethod } from "./utils/apiClient"; // API request utility
+
+// Initial totals state
+const totals = {
+  totalCredits: 0,
+  totalDebits: 0,
+  total: 0,
+};
+
+/**
+ * Main function for the AccountingApp component.
+ * This function handles state initialization, data fetching, and user interactions such as data submission, deletion, and logout.
+ *
+ * @returns {JSX.Element} The rendered AccountingApp component.
+ */
+const AccountingApp = () => {
+  // State variables
+  const [selectedMonth, setSelectedMonth] = useState(GetMonthName()); // Selected month for filtering
+  const [selectedYear, setSelectedYear] = useState(GetYearName()); // Selected year for filtering
+  const [data, setData] = useState([]); // Data entries for credits and debits
+  const [loading, setLoading] = useState(true); // Loading state
+  const [totalAmount, setTotalAmount] = useState(totals); // Total calculations
+  const navigate = useNavigate(); // Get navigate function for routing
+
+  /**
+   * Fetches data from the API based on the selected month and year.
+   * Updates the data state and calculates totals.
+   *
+   * @async
+   * @function fetchData
+   */
+  const fetchData = async () => {
+    try {
+      const url = `${process.env.REACT_APP_BACKEND_URL}/data`; // API endpoint
+      const user = GetUserToSessionStorage(); // Retrieve user from session storage
+
+      const params = {
+        user: user.user,
+        month: monthToNumber(selectedMonth),
+        year: selectedYear,
+      };
+
+      const response = await makeRequest(HttpMethod.GET, url, null, params);
+      console.log("Data fetched:", response); // Log the content
+      setData(response); // Update data state
+
+      const totalsCopy = { ...totals };
+
+      // Calculate totals for credits and debits
+      response.forEach((item) => {
+        let value = parseFloat(item.value);
+
+        if (item.entry === "credit") {
+          // Update total credits
+          totalsCopy.totalCredits += value;
+          totalsCopy.total += value; // Update total amount
+        } else {
+          // Update total debits
+          totalsCopy.totalDebits += value;
+          totalsCopy.total -= value; // Update total amount
+        }
+      });
+
+      setTotalAmount(totalsCopy); // Set calculated totals
+    } catch (error) {
+      console.error("Error fetching data:", error); // Log any errors
+    } finally {
+      setLoading(false); // Set loading to false regardless of success or failure
+    }
+  };
+
+  // Call fetchData on mount and when selectedMonth or selectedYear changes
+  useEffect(() => {
+    setLoading(true); // Set loading to true while fetching data
+    fetchData();
+  }, [selectedMonth, selectedYear]); // Update on month/year change
+
+  /**
+   * Handles form submission to add a new transaction.
+   *
+   * @async
+   * @function handleSubmit
+   * @param {Object} formData - The data from the form submission.
+   */
+  const handleSubmit = async (formData) => {
+    try {
+      const url = `${process.env.REACT_APP_BACKEND_URL}/data`; // API endpoint
+      const user = GetUserToSessionStorage(); // Retrieve user from session storage
+      const today = new Date(); // Current date
+
+      // Prepare updated transaction object
+      const updatedTransaction = {
+        ...formData,
+        user: user.user,
+        day: today.getDate().toString(),
+        month: monthToNumber(selectedMonth),
+        year: selectedYear,
+        role: "user",
+      };
+
+      await makeRequest(HttpMethod.POST, url, { content: updatedTransaction });
+      console.log("Data posted successfully");
+
+      // Fetch updated data after posting
+      fetchData();
+    } catch (error) {
+      console.error("Error posting data:", error);
+      alert("Failed to update data. Please try again.");
+    }
+  };
+
+  /**
+   * Handles user logout by clearing session data and navigating to the login page.
+   */
+  const handleLogout = () => {
+    DeleteUserToSessionStorage(); // Clear user session data
+    navigate("/login"); // Redirect to login page
+  };
+
+  /**
+   * Updates the selected month state.
+   *
+   * @param {string} month - The selected month.
+   */
+  const handleSelectedMonth = (month) => {
+    setSelectedMonth(month); // Update selected month
+  };
+
+  /**
+   * Updates the selected year state.
+   *
+   * @param {string} year - The selected year.
+   */
+  const handleSelectedYear = (year) => {
+    setSelectedYear(year); // Update selected year
+  };
+
+  /**
+   * Handles the deletion of a data entry by its ID.
+   *
+   * @async
+   * @function handleDeleteEntry
+   * @param {string} id - The ID of the entry to delete.
+   */
+  const handleDeleteEntry = async (id) => {
+    console.log(id);
+    try {
+      const url = `${process.env.REACT_APP_BACKEND_URL}/data/${id}`; // API endpoint for deletion
+
+      await makeRequest(HttpMethod.DELETE, url); // Make DELETE request
+      console.log("Data deleted successfully");
+
+      // Fetch updated data after deletion
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      alert("Failed to delete data. Please try again.");
+    }
+  };
+
+  return (
+    &lt;div className={classes["container-menu"]}>
+      &lt;NavBar
+        onUserLogout={handleLogout}
+        selectedMonth={selectedMonth}
+        onSelectMonth={handleSelectedMonth}
+        selectedYear={selectedYear}
+        onSelectYear={handleSelectedYear}
+      />
+
+      &lt;div
+        className={`${
+          process.env.REACT_APP_CURRENT_SERVER === "python"
+            ? classes["botton-top-backgroung-python"]
+            : classes["botton-top-backgroung-nodejs"]
+        } ${classes["bottom-top"]} p-4`}
+      >
+        &lt;div className={classes["bottom-top-left"]}>
+          &lt;Resume
+            label="Entradas"
+            icon={Credit}
+            amount={totalAmount.totalCredits}
+          />
+        &lt;/div>
+        &lt;div className={classes["bottom-top-left"]}>
+          &lt;Resume
+            label="Saídas"
+            icon={Debit}
+            amount={totalAmount.totalDebits}
+          />
+        &lt;/div>
+        &lt;div className={classes["bottom-top-left"]}>
+          &lt;Resume label="Total" icon={Total} amount={totalAmount.total} />
+        &lt;/div>
+      &lt;/div>
+
+      &lt;div className={classes["bottom-middle"]}>
+        &lt;InputData onHandleSubmit={handleSubmit} />
+      &lt;/div>
+
+      &lt;div className={classes["bottom-bottom"]}>
+        &lt;div className={classes["bottom-left"]}>
+          {loading ? (
+            &lt;p>Loading data...&lt;/p> // Show loading text
+          ) : (
+            &lt;Data data={data} onDeleteEntry={handleDeleteEntry} />
+          )}
+        &lt;/div>
+        &lt;div className={classes["bottom-right"]}>
+          {loading ? (
+            &lt;p>Loading data...&lt;/p> // Show loading text
+          ) : (
+            &lt;Chart
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
+              dataValues={data}
+            />
+          )}
+        &lt;/div>
+      &lt;/div>
+    &lt;/div>
+  );
+};
+
+export default AccountingApp; // Export the AccountingApp component
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="components.chart.module_Chart.html">Chart</a></li><li><a href="components.data.module_Data.html">Data</a></li><li><a href="components.inputData.module_CurrencyInput.html">CurrencyInput</a></li><li><a href="components.login.module_Login.html">Login</a></li><li><a href="components.login.module_LoginNaveBar.html">LoginNaveBar</a></li><li><a href="components.login.module_Register.html">Register</a></li><li><a href="components.module_AccountingApp.html">AccountingApp</a></li><li><a href="components.month.module_Month.html">Month</a></li><li><a href="components.nav-bar.module_NaveBar.html">NaveBar</a></li><li><a href="components.passwordStrengthChecker.module_PasswordStrengthChecker.html">PasswordStrengthChecker</a></li><li><a href="components.resume.module_Resume.html">Resume</a></li><li><a href="components.year.module_Year.html">Year</a></li><li><a href="module-App.html">App</a></li></ul><h3>Namespaces</h3><ul><li><a href="components.html">components</a></li></ul><h3>Global</h3><ul><li><a href="global.html#PrivateRoute">PrivateRoute</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#rootElement">rootElement</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Wed Oct 23 2024 16:54:27 GMT+0100 (Hora de verão da Europa Ocidental)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

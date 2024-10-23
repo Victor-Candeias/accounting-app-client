@@ -1,9 +1,12 @@
 /**
+ * @module components.AccountingApp
+ */
+/**
  * AccountingApp Component
  *
- * This component is responsible for managing the accounting data.
+ * This component manages the accounting data for the user.
  * It allows users to view, input, and manage their credit and debit transactions.
- * It also fetches data from an API based on selected month and year and displays
+ * It fetches data from an API based on the selected month and year and displays
  * the total credits, debits, and overall total.
  *
  * @component
@@ -30,6 +33,7 @@ import {
   GetUserToSessionStorage,
   DeleteUserToSessionStorage,
   monthToNumber,
+  logToLocalStorage
 } from "./utils/utils"; // Utility functions for API and session management
 import makeRequest, { HttpMethod } from "./utils/apiClient"; // API request utility
 
@@ -42,6 +46,7 @@ const totals = {
 
 /**
  * Main function for the AccountingApp component.
+ * This function handles state initialization, data fetching, and user interactions such as data submission, deletion, and logout.
  *
  * @returns {JSX.Element} The rendered AccountingApp component.
  */
@@ -72,8 +77,12 @@ const AccountingApp = () => {
         year: selectedYear,
       };
 
+      logToLocalStorage("fetchData();params=" + params);
+
       const response = await makeRequest(HttpMethod.GET, url, null, params);
-      console.log("Data fetched:", response); // Log the content
+
+      logToLocalStorage("AccountingApp();Data fetched:", response);
+
       setData(response); // Update data state
 
       const totalsCopy = { ...totals };
@@ -95,7 +104,7 @@ const AccountingApp = () => {
 
       setTotalAmount(totalsCopy); // Set calculated totals
     } catch (error) {
-      console.error("Error fetching data:", error); // Log any errors
+      logToLocalStorage("AccountingApp();Error fetching data:", error);
     } finally {
       setLoading(false); // Set loading to false regardless of success or failure
     }
@@ -130,7 +139,11 @@ const AccountingApp = () => {
         role: "user",
       };
 
-      await makeRequest(HttpMethod.POST, url, { content: updatedTransaction });
+      const dataToSend = { content: updatedTransaction };
+
+      logToLocalStorage("handleSubmit();dataToSend:", dataToSend);
+
+      await makeRequest(HttpMethod.POST, url, dataToSend);
       console.log("Data posted successfully");
 
       // Fetch updated data after posting
@@ -189,8 +202,6 @@ const AccountingApp = () => {
       alert("Failed to delete data. Please try again.");
     }
   };
-
-  console.log(data); // Log current data state for debugging
 
   return (
     <div className={classes["container-menu"]}>

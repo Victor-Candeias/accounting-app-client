@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/login/Register.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/login/Register.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { validatePassword } from "../utils/utils";
+import makeRequest, { HttpMethod } from "../utils/apiClient";
+import LoginNaveBar from "./LoginNaveBar";
+import PasswordStrengthChecker from "../passwordStrengthChecker/PasswordStrengthChecker";
+
+/**
+ * @module components.login.Register
+ */
+/**
+ * Register component for user registration.
+ *
+ * This component provides a form for users to register by entering a username, password, and repeated password.
+ * It includes basic validation, password strength checking, and calls an API to create the user account.
+ * 
+ * @component
+ * @returns {JSX.Element} JSX for the registration form
+ */
+const Register = () => {
+  const [username, setUsername] = useState(""); // Username state
+  const [password, setPassword] = useState(""); // Password state
+  const [repeatPassword, setRepeatPassword] = useState(""); // Repeat password state
+  const [message, setMessage] = useState(""); // Message state to display validation or error messages
+  const [loading, setLoading] = useState(false); // State to track loading state
+  const navigate = useNavigate(); // useNavigate hook for navigation
+
+  /**
+   * Handles the registration form submission.
+   * 
+   * It performs form validation and, if successful, sends a POST request to register the user.
+   * @param {Event} e - The form submit event
+   */
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    try {
+      setMessage("");
+      setLoading(true); // Set loading state
+
+      // Basic validation checks
+      if (username.length === 0 || password.length === 0) {
+        setMessage("Username and password are required!");
+        return;
+      }
+
+      if (repeatPassword !== password) {
+        setMessage("Passwords must match!");
+        return;
+      }
+
+      if (!validatePassword(password)) {
+        setMessage(
+          "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character."
+        );
+        return;
+      }
+
+      // API request to register user
+      const url = `${process.env.REACT_APP_BACKEND_URL}/auth/register`;
+      await makeRequest(HttpMethod.POST, url, {
+        username,
+        password,
+      });
+
+      navigate("/"); // Navigate to home page after successful registration
+
+    } catch (error) {
+      console.error("Registration error:", error); // Log errors for debugging
+      setMessage(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
+    } finally {
+      setLoading(false); // Stop loading state
+    }
+  };
+
+  return (
+    &lt;>
+      {/* Navigation bar with login link */}
+      &lt;LoginNaveBar caption={"Login"} link={"/"} />
+      
+      &lt;div className="max-w-md mx-auto p-8 bg-white shadow-md rounded-lg">
+        &lt;h2 className="text-2xl font-bold mb-6 text-center">Register&lt;/h2>
+
+        {/* Registration form */}
+        &lt;form className="space-y-4" onSubmit={handleRegister}>
+          
+          {/* Username field */}
+          &lt;div className="flex flex-col">
+            &lt;label className="text-gray-700 font-semibold">Username:&lt;/label>
+            &lt;input
+              className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              aria-label="Username"
+            />
+          &lt;/div>
+
+          {/* Password strength checker */}
+          &lt;PasswordStrengthChecker label="Password" password={password} setPassword={setPassword} />
+
+          {/* Repeat password field */}
+          &lt;div className="flex flex-col">
+            &lt;label className="text-gray-700 font-semibold">Repeat Password:&lt;/label>
+            &lt;input
+              className="mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="password"
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              aria-label="Repeat Password"
+            />
+          &lt;/div>
+
+          {/* Submit button */}
+          &lt;button
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="submit"
+            disabled={loading} // Disable button while loading
+          >
+            {loading ? "Registering..." : "Register"}
+          &lt;/button>
+        &lt;/form>
+
+        {/* Display message for validation errors or success */}
+        {message &amp;&amp; (
+          &lt;p className="text-2xl font-bold mb-6 text-center text-red-500">
+            &lt;br />
+            {message}
+          &lt;/p>
+        )}
+      &lt;/div>
+    &lt;/>
+  );
+};
+
+export default Register;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="components.chart.module_Chart.html">Chart</a></li><li><a href="components.data.module_Data.html">Data</a></li><li><a href="components.inputData.module_CurrencyInput.html">CurrencyInput</a></li><li><a href="components.login.module_Login.html">Login</a></li><li><a href="components.login.module_LoginNaveBar.html">LoginNaveBar</a></li><li><a href="components.login.module_Register.html">Register</a></li><li><a href="components.module_AccountingApp.html">AccountingApp</a></li><li><a href="components.month.module_Month.html">Month</a></li><li><a href="components.nav-bar.module_NaveBar.html">NaveBar</a></li><li><a href="components.passwordStrengthChecker.module_PasswordStrengthChecker.html">PasswordStrengthChecker</a></li><li><a href="components.resume.module_Resume.html">Resume</a></li><li><a href="components.year.module_Year.html">Year</a></li><li><a href="module-App.html">App</a></li></ul><h3>Namespaces</h3><ul><li><a href="components.html">components</a></li></ul><h3>Global</h3><ul><li><a href="global.html#PrivateRoute">PrivateRoute</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#rootElement">rootElement</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Wed Oct 23 2024 16:54:27 GMT+0100 (Hora de verão da Europa Ocidental)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/utils/utils.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/utils/utils.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// Import date-fns functions and the Portuguese locale
+import { parse, format } from 'date-fns';
+import { pt } from 'date-fns/locale';
+
+export const TOKEN_KEY = "token";
+export const LAST_ACTIVITY_KEY = "lastActivity";
+export const LOCATION = "pt-PT";
+export const DEFAULT_AUTO_LOGOUT_TIMEOUT = 300000;
+
+/**
+ * @namespace components
+ */
+
+/**
+ * @group utils
+ */
+/**
+ * Gets the month name from the current location in full format.
+ *
+ * @memberof components.GetMonthName
+ * @param {Date} [date=new Date()] - The date object to extract the month from.
+ * @returns {string} The full name of the month in the current location.
+ */
+export const GetMonthName = (date = new Date()) => {
+  return date.toLocaleString(LOCATION, { month: "long" });
+};
+
+/**
+ * Gets the current year in "yyyy" format from the current location.
+ *
+ * @memberof components.GetYearName
+ * @returns {string} The year in numeric format (e.g., "2024").
+ */
+export const GetYearName = () => {
+  return new Date().toLocaleString(LOCATION, { year: "numeric" });
+};
+
+/**
+ * Adds an item to the sessionStorage.
+ *
+ * @memberof components.AddSessionStorageItem
+ * @param {string} key - The key under which the data will be saved.
+ * @param {string} value - The data to save, which will be stringified.
+ */
+export const AddSessionStorageItem = (key, value) => {
+  sessionStorage.setItem(key, JSON.stringify(value));
+};
+
+/**
+ * Adds a user and token to sessionStorage.
+ *
+ * @memberof components.AddUserToSessionStorage
+ * @param {Object} user - The user object to be stored.
+ * @param {string} token - The token associated with the user.
+ */
+export const AddUserToSessionStorage = (user, token) => {
+  sessionStorage.setItem(TOKEN_KEY, JSON.stringify({ user, token }));
+};
+
+/**
+ * Retrieves the user and token from sessionStorage.
+ *
+ * @memberof components.GetUserToSessionStorage
+ * @returns {Object|null} The user and token object if found, or null if not present.
+ */
+export const GetUserToSessionStorage = () => {
+  const item = sessionStorage.getItem(TOKEN_KEY);
+  return item ? JSON.parse(item) : null;
+};
+
+/**
+ * Deletes the user and token from sessionStorage.
+ * @memberof components.DeleteUserToSessionStorage
+ */
+export const DeleteUserToSessionStorage = () => {
+  sessionStorage.removeItem(TOKEN_KEY);
+};
+
+/**
+ * Retrieves an item from sessionStorage by key.
+ *
+ * @memberof components.GetSessionStorageItem
+ * @param {string} key - The key of the item to retrieve.
+ * @returns {Object|null} The parsed JSON object if found, or null if not present.
+ */
+export const GetSessionStorageItem = (key) => {
+  const item = sessionStorage.getItem(key);
+  return item ? JSON.parse(item) : null;
+};
+
+/**
+ * Deletes an item from sessionStorage by key.
+ *
+ * @memberof components.RemoveSessionItem
+ * @param {string} key - The key of the item to remove.
+ */
+export const RemoveSessionItem = (key) => {
+  sessionStorage.removeItem(key);
+};
+
+/**
+ * Formats a string or number into a currency format (e.g., "0,00").
+ *
+ * @memberof components.formatCurrency
+ * @param {string|number} [inputValue="0,00"] - The value to format, default is "0,00".
+ * @returns {string} The formatted currency string.
+ */
+export const formatCurrency = (inputValue = "0,00") => {
+  if (inputValue === "" || inputValue === 0) return "0,00"; // Handle empty input
+
+  if (typeof inputValue !== "string") {
+    inputValue = String(inputValue); // Convert to string if necessary
+  }
+
+  const parsedValue = parseFloat(inputValue.replace(",", ".")); // Replace commas with dots
+
+  if (isNaN(parsedValue)) {
+    return "0.00"; // Return default if not a valid number
+  }
+
+  const numericValue = (parsedValue / 100).toFixed(2); // Ensure two decimal places
+  const formattedValue = numericValue.replace(".", ","); // Replace dot with comma
+
+  return formattedValue;
+};
+
+/**
+ * Validates a password based on complexity rules.
+ * Requires at least one uppercase letter, one lowercase letter, one digit, and one special character.
+ * Minimum length is 8 characters.
+ *
+ * @memberof components.validatePassword
+ * @param {string} password - The password to validate.
+ * @returns {boolean} True if the password meets the complexity requirements, otherwise false.
+ */
+export const validatePassword = (password) => {
+  const complexityRules =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&amp;])[A-Za-z\d@$!%*?&amp;]{8,}$/;
+  return complexityRules.test(password);
+};
+
+/**
+ * Converts a month name to its corresponding number (01-12).
+ *
+ * @memberof components.monthToNumber
+ * @param {string} monthName - The full month name (e.g., "January").
+ * @returns {string} The month number as a two-digit string (e.g., "01").
+ */
+export function monthToNumber(monthName) {
+  const data = parse(monthName, 'MMMM', new Date(), { locale: pt });
+  return String(format(data, 'MM')); // Extracts the month number with two digits
+}
+
+/**
+ * Converts a month number to its corresponding month name.
+ *
+ * @memberof components.numberToMonth
+ * @param {string} monthNumber - The month number (e.g., "01").
+ * @returns {string} The full month name (e.g., "January").
+ */
+export function numberToMonth(monthNumber) {
+  const data = parse(monthNumber, 'MM', new Date());
+  return format(data, 'MMMM', { locale: pt }); // Extracts the full month name
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="components.chart.module_Chart.html">Chart</a></li><li><a href="components.data.module_Data.html">Data</a></li><li><a href="components.inputData.module_CurrencyInput.html">CurrencyInput</a></li><li><a href="components.login.module_Login.html">Login</a></li><li><a href="components.login.module_LoginNaveBar.html">LoginNaveBar</a></li><li><a href="components.login.module_Register.html">Register</a></li><li><a href="components.module_AccountingApp.html">AccountingApp</a></li><li><a href="components.month.module_Month.html">Month</a></li><li><a href="components.nav-bar.module_NaveBar.html">NaveBar</a></li><li><a href="components.passwordStrengthChecker.module_PasswordStrengthChecker.html">PasswordStrengthChecker</a></li><li><a href="components.resume.module_Resume.html">Resume</a></li><li><a href="components.year.module_Year.html">Year</a></li><li><a href="module-App.html">App</a></li></ul><h3>Namespaces</h3><ul><li><a href="components.html">components</a></li></ul><h3>Global</h3><ul><li><a href="global.html#PrivateRoute">PrivateRoute</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#rootElement">rootElement</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Wed Oct 23 2024 16:54:27 GMT+0100 (Hora de verão da Europa Ocidental)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

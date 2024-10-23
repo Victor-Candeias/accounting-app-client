@@ -8,22 +8,49 @@ import {
   LAST_ACTIVITY_KEY,
 } from "../utils/utils";
 
+/**
+ * @namespace components
+ */
+
+/**
+ * @group utils
+ */
+/**
+ * AutoLogout component handles user session management by automatically logging out 
+ * the user after a specified timeout due to inactivity.
+ * 
+ * @memberof components.AutoLogout
+ * @param {Object} props - The props object.
+ * @param {number} [props.timeout=300000] - The timeout duration in milliseconds 
+ *                                            after which the user will be logged out 
+ *                                            due to inactivity. Default is 300000ms (5 minutes).
+ * @returns {null} Returns null as it does not render anything.
+ */
 const AutoLogout = ({ timeout = 300000 }) => {
   const navigate = useNavigate();
 
-  // Store the last activity in sessionStorage to share across tabs
+  /**
+   * Updates the last activity timestamp in session storage.
+   */
   const updateLastActivity = () => {
     const currentTime = Date.now();
     AddSessionStorageItem(LAST_ACTIVITY_KEY, currentTime.toString());
   };
 
+  /**
+   * Logs out the user by removing the token from session storage and 
+   * redirecting to the login page.
+   */
   const handleLogout = () => {
     RemoveSessionItem(TOKEN_KEY);
     navigate("/login"); // Redirect to login
   };
 
   useEffect(() => {
-    // Check activity across tabs
+    /**
+     * Checks the last activity timestamp and logs out the user 
+     * if the timeout period has been exceeded.
+     */
     const checkLastActivity = () => {
       const storedLastActivity = GetSessionStorageItem(LAST_ACTIVITY_KEY);
       if (
