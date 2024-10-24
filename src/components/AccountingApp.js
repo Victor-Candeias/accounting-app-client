@@ -33,9 +33,10 @@ import {
   GetUserToSessionStorage,
   DeleteUserToSessionStorage,
   monthToNumber,
-  logToLocalStorage
 } from "./utils/utils"; // Utility functions for API and session management
 import makeRequest, { HttpMethod } from "./utils/apiClient"; // API request utility
+import LogViewer from "./logViewer/LogViewer";
+import { logToLocalStorage } from "./utils/logger";
 
 // Initial totals state
 const totals = {

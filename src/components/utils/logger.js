@@ -37,7 +37,8 @@ export const logToLocalStorage = (message) => {
  */
 export const getLogsFromLocalStorage = () => {
   const logs = JSON.parse(localStorage.getItem('appLogs')) || [];
-  console.log(logs); // This will output the logs to the console
+  
+  return logs;
 };
 
 

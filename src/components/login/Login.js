@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AddUserToSessionStorage } from "../utils/utils";
+import { AddUserToSessionStorage, handleHashPassword } from "../utils/utils";
 import makeRequest, { HttpMethod } from "../utils/apiClient";
 import LoginNaveBar from "./LoginNaveBar";
 
@@ -25,6 +25,12 @@ const Login = () => {
    * @type {string}
    */
   const [password, setPassword] = useState("");
+
+    /**
+   * HashPassword entered by the user.
+   * @type {string}
+   */
+    const [hashedPassword, setHashedPassword] = useState('');
 
   /**
    * Message to display feedback to the user.
@@ -61,13 +67,17 @@ const Login = () => {
       setMessage(""); // Clear previous messages
       setLoading(true); // Set the loading state
 
+      console.log(process.env);
+      //
+      const hashedPassword = await handleHashPassword(password);
+
       // URL to the backend authentication endpoint
       const url = `${process.env.REACT_APP_BACKEND_URL}/auth/login`;
 
       // Make a POST request with the username and password
       const response = await makeRequest(HttpMethod.POST, url, {
         username,
-        password,
+        hashedPassword,
       });
 
       console.log("Login successful:", response);

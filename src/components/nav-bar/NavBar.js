@@ -44,7 +44,7 @@ const NavBar = ({
         <label className={classes["navbar-label"]}>
           Utilizador: {currentUser.user}
         </label>
-
+        
         {/* Month selection component */}
         <div className={classes["search-container"]}>
           <Month

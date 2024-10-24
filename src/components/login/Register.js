@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
-import { validatePassword } from "../utils/utils";
+import { validatePassword, hashPassword } from "../utils/utils";
+
 import makeRequest, { HttpMethod } from "../utils/apiClient";
 import LoginNaveBar from "./LoginNaveBar";
 import PasswordStrengthChecker from "../passwordStrengthChecker/PasswordStrengthChecker";
@@ -56,11 +57,13 @@ const Register = () => {
         return;
       }
 
+      const hashedPassword = hashPassword(password);
+
       // API request to register user
       const url = `${process.env.REACT_APP_BACKEND_URL}/auth/register`;
       await makeRequest(HttpMethod.POST, url, {
         username,
-        password,
+        hashedPassword,
       });
 
       navigate("/"); // Navigate to home page after successful registration

@@ -1,6 +1,7 @@
 // Import date-fns functions and the Portuguese locale
-import { parse, format } from 'date-fns';
-import { pt } from 'date-fns/locale';
+import { parse, format } from "date-fns";
+import { pt } from "date-fns/locale";
+import bcrypt from "bcryptjs";
 
 export const TOKEN_KEY = "token";
 export const LAST_ACTIVITY_KEY = "lastActivity";
@@ -147,8 +148,8 @@ export const validatePassword = (password) => {
  * @returns {string} The month number as a two-digit string (e.g., "01").
  */
 export function monthToNumber(monthName) {
-  const data = parse(monthName, 'MMMM', new Date(), { locale: pt });
-  return String(format(data, 'MM')); // Extracts the month number with two digits
+  const data = parse(monthName, "MMMM", new Date(), { locale: pt });
+  return String(format(data, "MM")); // Extracts the month number with two digits
 }
 
 /**
@@ -159,6 +160,24 @@ export function monthToNumber(monthName) {
  * @returns {string} The full month name (e.g., "January").
  */
 export function numberToMonth(monthNumber) {
-  const data = parse(monthNumber, 'MM', new Date());
-  return format(data, 'MMMM', { locale: pt }); // Extracts the full month name
+  const data = parse(monthNumber, "MM", new Date());
+  return format(data, "MMMM", { locale: pt }); // Extracts the full month name
 }
+
+export async function hashPassword(password) {
+  const saltRounds = parseInt(process.env.SALT_ROUNDS); // Convert SALT_ROUNDS to an integer
+  const hashedPassword = await bcrypt.hash(password, saltRounds); // Await the hashed result
+  return hashedPassword; // Return the hashed password
+}
+
+export const handleHashPassword = async (password) => {
+  // const saltRounds = 10; // Adjust the number of salt rounds as needed
+  try {
+    // Use bcrypt.hash to hash the password asynchronously
+    const hashedPassword = await bcrypt.hash(password, Number(process.env.REACT_APP_SALT_ROUNDS));
+    return hashedPassword;
+  } catch (error) {
+    console.error("Error hashing password:", error);
+    throw error; // Ensure the error is thrown if hashing fails
+  }
+};

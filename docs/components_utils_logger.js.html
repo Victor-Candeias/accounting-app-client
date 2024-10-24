@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: index.js</title>
+    <title>JSDoc: Source: components/utils/logger.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: index.js</h1>
+    <h1 class="page-title">Source: components/utils/logger.js</h1>
 
     
 
@@ -26,56 +26,50 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Entry point of the React application.
- * This file is responsible for rendering the main App component into the DOM and initializing performance tracking.
- */
-
-// Import React library for creating components
-import React from 'react';
-
-// Import ReactDOM for rendering components into the DOM
-import ReactDOM from 'react-dom/client';
-
-// Import global styles for the application
-import './index.css';
-
-// Import the main App component, which will be rendered into the root DOM node
-import App from './App';
-
-// Import the reportWebVitals function, used for measuring app performance
-import reportWebVitals from './reportWebVitals';
+            <pre class="prettyprint source linenums"><code>// src/utils/logger.js
 
 /**
- * Root DOM node where the React application is rendered.
- * @type {HTMLElement} 
+ * @namespace components
  */
-const rootElement = document.getElementById('root');
 
 /**
- * Initialize the React application and render the App component inside the root DOM element.
- * The App component is wrapped in React.StrictMode for highlighting potential issues in the app.
- * 
- * @param {HTMLElement} rootElement - The root DOM element where the React app is injected.
+ * @group utils
  */
-const root = ReactDOM.createRoot(rootElement);
-
-root.render(
-  &lt;React.StrictMode>
-    &lt;App />
-  &lt;/React.StrictMode>
-);
+/**
+ * Logs a message to the browser's local storage.
+ *
+ * This function retrieves existing logs from local storage, appends a new log entry
+ * with a timestamp, and then saves the updated log array back to local storage.
+ *
+ * @memberof components.logToLocalStorage
+ * @param {string} message - The message to log. 
+ *                            It should be a descriptive string representing an event or action.
+ *
+ * @returns {void} This function does not return a value.
+ */
+export const logToLocalStorage = (message) => {
+  const logs = JSON.parse(localStorage.getItem('appLogs')) || [];
+  logs.push({ timestamp: new Date().toISOString(), message });
+  localStorage.setItem('appLogs', JSON.stringify(logs));
+};
 
 /**
- * Measure performance of the app.
- * Pass a function to log performance metrics or send them to an analytics endpoint.
+ * Retrieves logs from local storage and logs them to the console.
  * 
- * @example
- * reportWebVitals(console.log);
+ * This function attempts to parse the stored logs from local storage under 
+ * the key 'appLogs'. If no logs are found, it returns an empty array. 
+ * The retrieved logs are then output to the console for review.
  * 
- * @param {function} [onPerfEntry] - Function to handle performance metrics (e.g., console.log or analytics function).
+ * @memberof components.getLogsFromLocalStorage
+ * @returns {void} This function does not return a value.
  */
-reportWebVitals();
+export const getLogsFromLocalStorage = () => {
+  const logs = JSON.parse(localStorage.getItem('appLogs')) || [];
+  console.log(logs); // This will output the logs to the console
+};
+
+
+
 </code></pre>
         </article>
     </section>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: index.js</title>
+    <title>JSDoc: Source: components/logViewer/LogViewer.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: index.js</h1>
+    <h1 class="page-title">Source: components/logViewer/LogViewer.js</h1>
 
     
 
@@ -26,56 +26,40 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Entry point of the React application.
- * This file is responsible for rendering the main App component into the DOM and initializing performance tracking.
- */
-
-// Import React library for creating components
-import React from 'react';
-
-// Import ReactDOM for rendering components into the DOM
-import ReactDOM from 'react-dom/client';
-
-// Import global styles for the application
-import './index.css';
-
-// Import the main App component, which will be rendered into the root DOM node
-import App from './App';
-
-// Import the reportWebVitals function, used for measuring app performance
-import reportWebVitals from './reportWebVitals';
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import { getLogsFromLocalStorage } from './utils/logger';
 
 /**
- * Root DOM node where the React application is rendered.
- * @type {HTMLElement} 
+ * @namespace components
  */
-const rootElement = document.getElementById('root');
 
 /**
- * Initialize the React application and render the App component inside the root DOM element.
- * The App component is wrapped in React.StrictMode for highlighting potential issues in the app.
- * 
- * @param {HTMLElement} rootElement - The root DOM element where the React app is injected.
+ * @group utils
  */
-const root = ReactDOM.createRoot(rootElement);
-
-root.render(
-  &lt;React.StrictMode>
-    &lt;App />
-  &lt;/React.StrictMode>
-);
-
 /**
- * Measure performance of the app.
- * Pass a function to log performance metrics or send them to an analytics endpoint.
+ * LogViewer component that provides a button to view logs.
  * 
- * @example
- * reportWebVitals(console.log);
+ * This component retrieves and displays logs stored in local storage
+ * when the "View Logs" button is clicked. The logs are fetched using 
+ * the `getLogsFromLocalStorage` function imported from the logger utility.
  * 
- * @param {function} [onPerfEntry] - Function to handle performance metrics (e.g., console.log or analytics function).
+ * @memberof components.LogViewer
+ * @component
+ * @returns {JSX.Element} The rendered LogViewer component.
  */
-reportWebVitals();
+const LogViewer = () => {
+  const handleViewLogs = () => {
+    getLogsFromLocalStorage();
+  };
+
+  return (
+    &lt;div>
+      &lt;button onClick={handleViewLogs}>View Logs&lt;/button>
+    &lt;/div>
+  );
+};
+
+export default LogViewer;
 </code></pre>
         </article>
     </section>
