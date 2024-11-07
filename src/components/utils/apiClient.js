@@ -1,7 +1,8 @@
 // apiHelper.js
 import axios from "axios";
 import { TOKEN_KEY, GetSessionStorageItem } from "./utils";
-
+import { logToLocalStorage } from "./logger"
+;
 /**
  * @namespace components
  */
@@ -26,12 +27,12 @@ export const HttpMethod = {
  * Utility function for handling axios requests.
  *
  * @memberof components.makeRequest
- * @param {string} method - The HTTP method to use for the request. Must be one of 
+ * @param {string} method - The HTTP method to use for the request. Must be one of
  *                          the values defined in HttpMethod.
  * @param {string} url - The URL to which the request is sent.
- * @param {Object|null} [data=null] - The data to be sent as the request body, 
+ * @param {Object|null} [data=null] - The data to be sent as the request body,
  *                                     applicable for POST requests. Default is null.
- * @param {Object|null} [params=null] - The query parameters to be sent with the 
+ * @param {Object|null} [params=null] - The query parameters to be sent with the
  *                                       request, applicable for GET requests. Default is null.
  * @returns {Promise<Object>} The response data from the request.
  * @throws {Error} Throws an error if the HTTP method is invalid or if the request fails.
@@ -47,10 +48,10 @@ export default async function makeRequest(
     throw new Error(`Invalid HTTP method: ${method}`);
   }
 
-  console.log("method=" + method);
-  console.log("url=" + url);
-  console.log("data=" + data);
-  console.log("params=" + params);
+  logToLocalStorage("method=" + method);
+  logToLocalStorage("url=" + url);
+  logToLocalStorage("data=" + data);
+  logToLocalStorage("params=" + params);
 
   // Set up the headers, including the Authorization token if provided
   const token = GetSessionStorageItem(TOKEN_KEY);
@@ -71,7 +72,7 @@ export default async function makeRequest(
   } catch (error) {
     const msg = `Error making ${method.toUpperCase()} request to ${url}:`;
 
-    console.error(msg, error);
+    logToLocalStorage(msg);
 
     if (error.status === 404) {
       return [];

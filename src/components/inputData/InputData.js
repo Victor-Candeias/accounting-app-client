@@ -1,56 +1,78 @@
-import { useState } from "react";
-import CurrencyInput from "./CurrencyInput";
-import classes from "./InputData.module.css";
+// Import necessary dependencies and components
+import { useState } from "react";               // useState hook to manage component state
+import CurrencyInput from "./CurrencyInput";    // Custom currency input component
+import classes from "./InputData.module.css";   // CSS module for styling
 
+/**
+ * InputData Component
+ * 
+ * Renders a form for inputting data with fields for description, value, and entry type (credit/debit).
+ * Handles form validation and submission.
+ * 
+ * Props:
+ * - onHandleSubmit: Function to handle the submission of the form data.
+ */
 const InputData = ({ onHandleSubmit }) => {
+  // State variables to manage the input value and error messages
   const [errorMessage, setErrorMessage] = useState("");
   const [value, setValue] = useState("");
 
-  // Handle change event for the input field
+  /**
+   * Updates the state with the entered value after cleaning any non-numeric characters.
+   * 
+   * @param {string} enterValue - The raw value entered in the CurrencyInput field.
+   */
   const handleInputChange = (enterValue) => {
-    // Update the state with the raw number (removing non-numeric characters)
-    setValue(enterValue);
+    setValue(enterValue); // Set the cleaned value
   };
 
+  /**
+   * Handles form submission and validation.
+   * 
+   * @param {Event} event - The form submission event.
+   */
   const handleOnSubmitForm = (event) => {
-    event.preventDefault();
-    setErrorMessage(""); // Reset error message
+    event.preventDefault(); // Prevent default form submission behavior
+    setErrorMessage("");    // Reset any previous error message
 
     try {
-      const { description, options } = event.target; // Destructure to get values
-      const entry = options.value; // Get selected radio input
+      // Destructure to retrieve form field values
+      const { description, options } = event.target;
+      const entry = options.value;  // Get the selected radio button's value
 
-      // Validate entry type
+      // Validation for entry type selection
       if (!entry) {
         throw new Error("Entry type cannot be null.");
       }
 
-      // Validate description and value
+      // Validate that description and value fields are not empty
       if (description.value.trim() === "" || value.trim() === "") {
         throw new Error("Description and value fields cannot be empty.");
       }
 
-      // Pass the form data to onHandleSubmit
+      // Create an object to hold the form data
       const formData = {
         description: description.value,
-        value: value.replace(',', ''),
+        value: value.replace(',', ''), // Remove comma for numerical format
         entry,
       };
 
-      onHandleSubmit(formData);
+      onHandleSubmit(formData); // Pass form data to the parent handler
 
-      // Reset the form after submission
-      event.target.reset(); // Resets all non-controlled fields (e.g., radio buttons)
-      setValue(""); // Reset the value field to empty
+      // Reset the form fields after successful submission
+      event.target.reset();  // Reset non-controlled fields
+      setValue("");          // Clear the controlled input field for value
     } catch (error) {
-      console.log(error);
-      setErrorMessage(error.message); // Set error message for UI feedback
+      console.log(error);         // Log the error for debugging
+      setErrorMessage(error.message); // Set error message for user feedback
     }
   };
 
   return (
     <form id="itemForm" onSubmit={handleOnSubmitForm}>
       <div className={classes["container-input-data"]}>
+        
+        {/* Description Input Field */}
         <div className={classes["left-input-data"]}>
           <label className={classes["input-label"]}>Descrição</label>
           <input
@@ -62,11 +84,13 @@ const InputData = ({ onHandleSubmit }) => {
           />
         </div>
 
+        {/* Currency Input Field */}
         <div className={classes["left-input-data"]}>
           <label className={classes["input-label"]}>Valor</label>
           <CurrencyInput id="value" handleInputChange={handleInputChange} />
         </div>
 
+        {/* Radio Buttons for Entry Type Selection */}
         <div className={classes["left-input-data"]}>
           <label className={classes["input-label"]}>
             <input
@@ -75,7 +99,7 @@ const InputData = ({ onHandleSubmit }) => {
               type="radio"
               name="options"
               value="credit"
-              defaultChecked // Default to credit
+              defaultChecked // Default to "credit" option
             />
             &nbsp;&nbsp;Entrada
           </label>
@@ -92,12 +116,14 @@ const InputData = ({ onHandleSubmit }) => {
           </label>
         </div>
 
+        {/* Error Message Display */}
         {errorMessage && (
           <div className={classes["error-message"]}>
-            {errorMessage} {/* Display error message to user */}
+            {errorMessage} {/* Show error message if validation fails */}
           </div>
         )}
 
+        {/* Submit Button */}
         <div className={classes["left-input-data-finish"]}>
           <input className={classes["input-button"]} type="submit" value="Adicionar" />
         </div>
