@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { AddUserToSessionStorage, handleHashPassword } from "../utils/utils";
 import makeRequest, { HttpMethod } from "../utils/apiClient";
 import LoginNaveBar from "./LoginNaveBar";
+import { showMessageBox } from "../modal/messageBoxService";
+import { logToLocalStorage } from "../utils/logger";
 
 /**
  * @module components.login.Login
@@ -26,18 +28,6 @@ const Login = () => {
    */
   const [password, setPassword] = useState("");
 
-    /**
-   * HashPassword entered by the user.
-   * @type {string}
-   */
-    const [hashedPassword, setHashedPassword] = useState('');
-
-  /**
-   * Message to display feedback to the user.
-   * @type {string}
-   */
-  const [message, setMessage] = useState("");
-
   /**
    * Boolean to indicate whether the form is in the loading state.
    * @type {boolean}
@@ -59,16 +49,14 @@ const Login = () => {
 
     // Basic validation to ensure the username and password fields are not empty
     if (!username || !password) {
-      setMessage("Username and password are required.");
+      await showMessageBox("Login", "Username and password are required.");
       return;
     }
 
     try {
-      setMessage(""); // Clear previous messages
       setLoading(true); // Set the loading state
 
-      console.log(process.env);
-      //
+      // hash the password
       const hashedPassword = await handleHashPassword(password);
 
       // URL to the backend authentication endpoint
@@ -80,7 +68,7 @@ const Login = () => {
         hashedPassword,
       });
 
-      console.log("Login successful:", response);
+      logToLocalStorage("Login successful:", response);
 
       // Check if the response indicates the user does not exist
       if (Array.isArray(response) && response.length === 0) {
@@ -95,7 +83,8 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       // Display an error message if the login failed
-      setMessage(
+      await showMessageBox(
+        "Login",
         error.response?.data?.message || "An error occurred. Please try again."
       );
     } finally {
@@ -137,12 +126,6 @@ const Login = () => {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-        {message && (
-          <p className="text-2xl font-bold mb-6 text-center text-red-500">
-            <br />
-            {message}
-          </p>
-        )}
       </div>
     </>
   );

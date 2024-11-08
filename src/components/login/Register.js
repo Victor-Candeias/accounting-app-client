@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import { validatePassword, hashPassword } from "../utils/utils";
-
+import { showMessageBox } from "../modal/messageBoxService";
 import makeRequest, { HttpMethod } from "../utils/apiClient";
 import LoginNaveBar from "./LoginNaveBar";
 import PasswordStrengthChecker from "../passwordStrengthChecker/PasswordStrengthChecker";
+import { logToLocalStorage } from "../utils/logger";
 
 /**
  * @module components.login.Register
@@ -22,7 +23,6 @@ const Register = () => {
   const [username, setUsername] = useState(""); // Username state
   const [password, setPassword] = useState(""); // Password state
   const [repeatPassword, setRepeatPassword] = useState(""); // Repeat password state
-  const [message, setMessage] = useState(""); // Message state to display validation or error messages
   const [loading, setLoading] = useState(false); // State to track loading state
   const navigate = useNavigate(); // useNavigate hook for navigation
 
@@ -36,24 +36,21 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      setMessage("");
       setLoading(true); // Set loading state
 
       // Basic validation checks
       if (username.length === 0 || password.length === 0) {
-        setMessage("Username and password are required!");
+        await showMessageBox("Register", "Username and password are required!");
         return;
       }
 
       if (repeatPassword !== password) {
-        setMessage("Passwords must match!");
+        await showMessageBox("Register", "Passwords must match!");
         return;
       }
 
       if (!validatePassword(password)) {
-        setMessage(
-          "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character."
-        );
+        await showMessageBox("Register", "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character.");
         return;
       }
 
@@ -69,10 +66,8 @@ const Register = () => {
       navigate("/"); // Navigate to home page after successful registration
 
     } catch (error) {
-      console.error("Registration error:", error); // Log errors for debugging
-      setMessage(
-        error.response?.data?.message || "An error occurred. Please try again."
-      );
+      logToLocalStorage(error.response?.data?.message || "An error occurred. Please try again.");  // Log errors for debugging
+      await showMessageBox("Register", error.response?.data?.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false); // Stop loading state
     }
@@ -125,14 +120,6 @@ const Register = () => {
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
-
-        {/* Display message for validation errors or success */}
-        {message && (
-          <p className="text-2xl font-bold mb-6 text-center text-red-500">
-            <br />
-            {message}
-          </p>
-        )}
       </div>
     </>
   );

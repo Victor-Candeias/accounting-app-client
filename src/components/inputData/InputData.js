@@ -2,6 +2,8 @@
 import { useState } from "react";               // useState hook to manage component state
 import CurrencyInput from "./CurrencyInput";    // Custom currency input component
 import classes from "./InputData.module.css";   // CSS module for styling
+import { showMessageBox } from "../modal/messageBoxService";
+import { logToLocalStorage } from "../utils/logger";
 
 /**
  * InputData Component
@@ -14,7 +16,6 @@ import classes from "./InputData.module.css";   // CSS module for styling
  */
 const InputData = ({ onHandleSubmit }) => {
   // State variables to manage the input value and error messages
-  const [errorMessage, setErrorMessage] = useState("");
   const [value, setValue] = useState("");
 
   /**
@@ -33,7 +34,6 @@ const InputData = ({ onHandleSubmit }) => {
    */
   const handleOnSubmitForm = (event) => {
     event.preventDefault(); // Prevent default form submission behavior
-    setErrorMessage("");    // Reset any previous error message
 
     try {
       // Destructure to retrieve form field values
@@ -63,8 +63,8 @@ const InputData = ({ onHandleSubmit }) => {
       event.target.reset();  // Reset non-controlled fields
       setValue("");          // Clear the controlled input field for value
     } catch (error) {
-      console.log(error);         // Log the error for debugging
-      setErrorMessage(error.message); // Set error message for user feedback
+      logToLocalStorage(error);         // Log the error for debugging
+      showMessageBox("Input Data", error.message);
     }
   };
 
@@ -115,13 +115,6 @@ const InputData = ({ onHandleSubmit }) => {
             &nbsp;&nbsp;Saída
           </label>
         </div>
-
-        {/* Error Message Display */}
-        {errorMessage && (
-          <div className={classes["error-message"]}>
-            {errorMessage} {/* Show error message if validation fails */}
-          </div>
-        )}
 
         {/* Submit Button */}
         <div className={classes["left-input-data-finish"]}>

@@ -2,6 +2,7 @@
 import { parse, format } from "date-fns";
 import { pt } from "date-fns/locale";
 import bcrypt from "bcryptjs";
+import { logToLocalStorage } from "./logger";
 
 export const TOKEN_KEY = "token";
 export const LAST_ACTIVITY_KEY = "lastActivity";
@@ -177,7 +178,7 @@ export const handleHashPassword = async (password) => {
     const hashedPassword = await bcrypt.hash(password, Number(process.env.REACT_APP_SALT_ROUNDS));
     return hashedPassword;
   } catch (error) {
-    console.error("Error hashing password:", error);
+    logToLocalStorage("Error hashing password:" + error)();
     throw error; // Ensure the error is thrown if hashing fails
   }
 };
