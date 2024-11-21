@@ -56,16 +56,13 @@ const Login = () => {
     try {
       setLoading(true); // Set the loading state
 
-      // hash the password
-      const hashedPassword = await handleHashPassword(password);
-
       // URL to the backend authentication endpoint
       const url = `${process.env.REACT_APP_BACKEND_URL}/auth/login`;
 
       // Make a POST request with the username and password
       const response = await makeRequest(HttpMethod.POST, url, {
         username,
-        hashedPassword,
+        password,
       });
 
       logToLocalStorage("Login successful:", response);

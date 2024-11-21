@@ -54,13 +54,12 @@ const Register = () => {
         return;
       }
 
-      const hashedPassword = hashPassword(password);
-
       // API request to register user
       const url = `${process.env.REACT_APP_BACKEND_URL}/auth/register`;
       await makeRequest(HttpMethod.POST, url, {
-        username,
-        hashedPassword,
+        'username': username,
+        'password': password,
+        'role': 'user'
       });
 
       navigate("/"); // Navigate to home page after successful registration
