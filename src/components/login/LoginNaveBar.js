@@ -20,11 +20,7 @@ import { Link } from "react-router-dom"; // Assuming React Router is used for na
 const LoginNaveBar = ({ caption, link }) => {
   return (
     <nav
-      className={`${
-        process.env.REACT_APP_CURRENT_SERVER === "python"
-          ? classes["boby-navebar-python"]
-          : classes["boby-navebar-nodejs"]
-      } p-4`}
+      className={`${classes["boby-navebar"]} p-4`}
     >
       <div className="max-w-md mx-auto flex justify-between items-center">
         <h1 className="text-white text-2xl font-bold">Aplicação Financeira</h1>

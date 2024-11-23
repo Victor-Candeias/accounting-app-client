@@ -69,59 +69,58 @@ const InputData = ({ onHandleSubmit }) => {
   };
 
   return (
-    <form id="itemForm" onSubmit={handleOnSubmitForm}>
-      <div className={classes["container-input-data"]}>
-        
-        {/* Description Input Field */}
-        <div className={classes["left-input-data"]}>
-          <label className={classes["input-label"]}>Descrição</label>
-          <input
-            id="description"
-            className={`${classes["input-input"]} ${classes["input-input-description"]}`}
-            type="text"
-            placeholder="Inserir Descrição..."
-            name="description" // Added name for easier access
-          />
-        </div>
-
-        {/* Currency Input Field */}
-        <div className={classes["left-input-data"]}>
-          <label className={classes["input-label"]}>Valor</label>
-          <CurrencyInput id="value" handleInputChange={handleInputChange} />
-        </div>
-
-        {/* Radio Buttons for Entry Type Selection */}
-        <div className={classes["left-input-data"]}>
-          <label className={classes["input-label"]}>
+      <form id="itemForm" onSubmit={handleOnSubmitForm}>
+        <div className={classes["container-input-data"]}>
+          {/* Description Input Field */}
+          <div className={classes["left-input-data"]}>
+            <label className={classes["input-label"]}>Descrição</label>
             <input
-              id="optionCredit"
-              className={classes["input-radio"]}
-              type="radio"
-              name="options"
-              value="credit"
-              defaultChecked // Default to "credit" option
+              id="description"
+              className={`${classes["input-input"]} ${classes["input-input-description"]}`}
+              type="text"
+              placeholder="Inserir Descrição..."
+              name="description"
             />
-            &nbsp;&nbsp;Entrada
-          </label>
+          </div>
 
-          <label className={classes["input-label"]}>
-            <input
-              id="optionDebit"
-              className={classes["input-radio"]}
-              type="radio"
-              name="options"
-              value="debit"
-            />
-            &nbsp;&nbsp;Saída
-          </label>
-        </div>
+          {/* Currency Input Field */}
+          <div className={classes["left-input-data"]}>
+            <label className={classes["input-label"]}>Valor</label>
+            <CurrencyInput id="value" handleInputChange={handleInputChange} />
+          </div>
 
-        {/* Submit Button */}
-        <div className={classes["left-input-data-finish"]}>
-          <input className={classes["input-button"]} type="submit" value="Adicionar" />
+          {/* Radio Buttons for Entry Type Selection */}
+          <div className={classes["left-input-data-checks"]}>
+            <label className={classes["input-label"]}>
+              <input
+                id="optionCredit"
+                className={classes["input-radio"]}
+                type="radio"
+                name="options"
+                value="credit"
+                defaultChecked
+              />
+              &nbsp;&nbsp;Entrada
+            </label>
+
+            <label className={classes["input-label"]}>
+              <input
+                id="optionDebit"
+                className={classes["input-radio"]}
+                type="radio"
+                name="options"
+                value="debit"
+              />
+              &nbsp;&nbsp;Saída
+            </label>
+          </div>
+
+          {/* Submit Button */}
+          <div className={classes["left-input-data-finish"]}>
+            <input className={classes["input-button"]} type="submit" value="Adicionar" />
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
   );
 };
 

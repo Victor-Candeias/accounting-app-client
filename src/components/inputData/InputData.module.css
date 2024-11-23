@@ -1,29 +1,43 @@
+/* Styles for the main container */
 .container-input-data {
     flex: 1; /* Take up equal width */
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* Default layout for larger screens */
     background-color: transparent;
     height: 100%;
     border-radius: 5px;
-}
+    flex-wrap: wrap; /* Allow wrapping to support responsiveness */
+    gap: 10px; /* Space between child elements */
+  }
 
+/* Individual input section styling */
 .left-input-data {
     background-color: transparent;
     margin: 4px;
     border-radius: 5px;
-    flex: 0 0 25%;
-}
+    flex: 0 0 25%; /* Each item takes 25% of the row by default */
+  }
 
-.left-input-data-finish {
+  /* Individual input section styling */
+.left-input-data-checks {
+    flex: 1; /* Take up equal width */
+    display: flex;
+    flex-direction: column; /* Default layout for larger screens */
     background-color: transparent;
     margin: 4px;
     border-radius: 5px;
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    flex: 0 0 25%; /* Each item takes 25% of the row by default */
+  }
 
+  .left-input-data-finish {
+    background-color: transparent;
+    margin: 10px;
+    border-radius: 5px;
+    vertical-align: middle;
+    align-items: flex-start;
+  }
+
+/* Styling for the label */
 .input-label {
     border-radius: 3px;
     width: 100%;
@@ -31,21 +45,16 @@
     margin-left: 10px;
     font-size: 1.2rem;
     font-style: italic;
-}
+  }
 
+/* Styling for input fields */
 .input-input {
     border-radius: 3px;
     width: 90%;
-    padding: 0;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    margin: -7px 10px 0 10px;
     font-size: large;
-    border-width: 1px;
-    outline: none;
     border: none;
     height: 40px;
-}
+  }
 
 .input-input-description {
     text-align: left !important; 
@@ -57,20 +66,38 @@
 
 .input-button {
     border-radius: 5px;
-    border-width: 1px;
     background-color: rgb(79, 79, 255);
     width: 150px;
-    padding: 0;
-    font-size: 0.9rem;
-    margin: 0 10px 10px 10px;
-    font-size: large;
     color: white;
+    font-size: large;
     padding: 10px;
     outline: none;
     border: none;
-}
+  }
 
 .input-radio {
     margin-left: 10px;
     padding-left: 10px;
+    vertical-align:middle;
 }
+
+/* Media query for smaller screens (width <= 765px) */
+@media (max-width: 765px) {
+    .container-input-data {
+      flex-direction: column; /* Stack items vertically */
+      align-items: stretch; /* Center items */
+      margin: 5px;
+    }
+  
+    .left-input-data {
+      flex: 0 0 100%; /* Items take full width in column layout */
+    }
+  
+    .left-input-data-finish {
+      flex: 0 0 auto; /* Maintain auto sizing for the button */
+    }
+
+    .input-input {
+        width: 100%;
+    }
+  }

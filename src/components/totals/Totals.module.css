@@ -1,0 +1,98 @@
+/* Styles for the container that holds the Resume components */
+.bottom-top {
+  background-color: transparent;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Ensure vertical alignment */
+  flex-wrap: wrap;
+  overflow-y: hidden;
+  gap: 15px;
+}
+
+.botton-top-backgroung {
+  background: linear-gradient(to bottom,  rgb(99, 9, 69) 50%, transparent 50%); /**/
+}
+
+/* Styles for each individual Resume component container */
+.bottom-top-left {
+  background-color: rgb(247, 244, 244);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 10px;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  flex: 1 1 30%; /* Items take up 30% of the width by default */
+}
+
+/* Application title styling */
+.label-title {
+  display: none;
+  font-style: italic;
+  color: white;
+  align-items: center;
+}
+  
+/* Styles for the hamburger button (only visible on small screens) */
+.hamburger {
+  display: none;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-left: auto; /* Push to the right */
+}
+  
+  /* Totals menu container */
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row; /* Stack items vertically when visible */
+    gap: 15px;
+    width: 100%;
+  }
+  
+  /* Hidden menu for small screens */
+  .menu-open {
+    display: flex; /* Show the menu when open */
+    flex-direction: column; /* Stack items vertically */
+  }
+  
+  /* Media query for small screens (width <= 765px) */
+  @media (max-width: 765px) {
+    .bottom-top {
+      flex-direction: column; /* Stack items vertically */
+      align-items: center; /* Center items */
+    }
+  
+    .bottom-top-left {
+      width: 100%; /* Make items full width in row layout */
+      flex: unset; /* Reset flex properties for small screens */
+      margin: 0;
+    }
+  
+    .hamburger {
+      display: block; /* Show hamburger button on small screens */
+    }
+  
+    .label-title {
+      display: block;
+    }
+
+    .menu {
+      display: none; /* Hide menu by default */
+    }
+  
+    .menu-open {
+      display: flex; /* Show menu when open */
+    }
+  
+    .botton-top-backgroung {
+      background: rgb(99, 9, 69);
+    }
+  }
+  

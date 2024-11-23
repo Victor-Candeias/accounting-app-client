@@ -1,14 +1,9 @@
-// Importing CSS classes from the NavBar.module.css file for styling the NavBar.
-// Importing the Month and Year components for selecting the month and year.
-// Importing the GetUserToSessionStorage function to retrieve the current user from session storage.
+import { useState } from "react";
 import classes from "./NavBar.module.css";
 import Month from "../month/Month";
 import Year from "../year/Year";
 import { GetUserToSessionStorage } from "../utils/utils";
 
-/**
- * @module components.nav-bar.NaveBar
- */
 /**
  * NavBar Component
  * 
@@ -28,44 +23,68 @@ const NavBar = ({
 }) => {
   // Retrieving the current user from session storage
   const currentUser = GetUserToSessionStorage();
+  
+  // State for toggling the hamburger menu
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Toggle the menu state
+  const toggleMenu = () => {
+    setMenuOpen((prevState) => !prevState);
+  };
 
   return (
     <div
-      className={`${process.env.REACT_APP_CURRENT_SERVER === "python" ? classes["topnav-python"] : classes["topnav-nodejs"]} ${classes.topnav}`}
+      className={classes.topnav}
     >
       {/* Application Title */}
       <label className={`${classes["navbar-label"]} ${classes["app-title"]}`}>
         Aplicação Financeira
       </label>
 
-      {/* Center section containing user information and selectors for month and year */}
-      <div className={classes["center-content"]}>
-        {/* Displaying the current user's username */}
-        <label className={classes["navbar-label"]}>
-          Utilizador: {currentUser.user}
-        </label>
-        
-        {/* Month selection component */}
-        <div className={classes["search-container"]}>
-          <Month
-            selectedMonth={selectedMonth}
-            onSelectMonth={onSelectMonth}
-          />
-        </div>
-
-        {/* Year selection component */}
-        <div className={classes["search-container"]}>
-          <Year
-            selectedYear={selectedYear}
-            onSelectYear={onSelectYear}
-          />
-        </div>
-      </div>
-
-      {/* Logout Button */}
-      <button className={classes["navbar-button"]} onClick={onUserLogout}>
-        Logout
+      {/* Hamburger Button for Small Screens */}
+      <button
+        className={classes["hamburger"]}
+        onClick={toggleMenu}
+        aria-label="Toggle menu"
+      >
+        ☰
       </button>
+
+      {/* Full or Collapsible Navigation Menu */}
+      <div
+        className={`${classes["menu"]} ${
+          menuOpen ? classes["menu-open"] : ""
+        }`}
+      >
+        {/* Center section containing user information and selectors */}
+        <div className={classes["center-content"]}>
+          {/* Displaying the current user's username */}
+          <label className={classes["navbar-label"]}>
+            Utilizador: {currentUser.user}
+          </label>
+          
+          {/* Month selection component */}
+          <div className={classes["search-container"]}>
+            <Month
+              selectedMonth={selectedMonth}
+              onSelectMonth={onSelectMonth}
+            />
+          </div>
+
+          {/* Year selection component */}
+          <div className={classes["search-container"]}>
+            <Year
+              selectedYear={selectedYear}
+              onSelectYear={onSelectYear}
+            />
+          </div>
+        </div>
+
+        {/* Logout Button */}
+        <button className={classes["navbar-button"]} onClick={onUserLogout}>
+          Logout
+        </button>
+      </div>
     </div>
   );
 };

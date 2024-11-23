@@ -37,6 +37,7 @@ import {
 import makeRequest, { HttpMethod } from "./utils/apiClient"; // API request utility
 import LogViewer from "./logViewer/LogViewer";
 import { logToLocalStorage } from "./utils/logger";
+import Totals from "./totals/Totals";
 
 // Initial totals state
 const totals = {
@@ -214,12 +215,12 @@ const AccountingApp = () => {
         onSelectYear={handleSelectedYear}
       />
 
+      {/* Show totals */}
+      <Totals totalAmount={totalAmount} />
+
+      {/*}
       <div
-        className={`${
-          process.env.REACT_APP_CURRENT_SERVER === "python"
-            ? classes["botton-top-backgroung-python"]
-            : classes["botton-top-backgroung-nodejs"]
-        } ${classes["bottom-top"]} p-4`}
+        className={`${classes["botton-top-backgroung"]} ${classes["bottom-top"]} p-4`}
       >
         <div className={classes["bottom-top-left"]}>
           <Resume
@@ -239,12 +240,14 @@ const AccountingApp = () => {
           <Resume label="Total" icon={Total} amount={totalAmount.total} />
         </div>
       </div>
-
+      */}
+      
       <div className={classes["bottom-middle"]}>
         <InputData onHandleSubmit={handleSubmit} />
       </div>
 
       <div className={classes["bottom-bottom"]}>
+        {/* Left Section */}
         <div className={classes["bottom-left"]}>
           {loading ? (
             <p>Loading data...</p> // Show loading text
@@ -252,6 +255,8 @@ const AccountingApp = () => {
             <Data data={data} onDeleteEntry={handleDeleteEntry} />
           )}
         </div>
+
+        {/* Right Section */}
         <div className={classes["bottom-right"]}>
           {loading ? (
             <p>Loading data...</p> // Show loading text
@@ -264,6 +269,7 @@ const AccountingApp = () => {
           )}
         </div>
       </div>
+
     </div>
   );
 };
