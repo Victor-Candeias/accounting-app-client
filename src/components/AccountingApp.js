@@ -18,15 +18,12 @@
 
 import { useNavigate } from "react-router-dom"; // Hook for navigation
 import classes from "./AccountingApp.module.css";
-import Resume from "./resume/Resume"; // Component to display summary information
 import InputData from "./inputData/InputData"; // Component for inputting data
 import Data from "./data/Data"; // Component for displaying data entries
 import Chart from "./chart/Chart"; // Component for displaying chart visualizations
-import Credit from "../assets/icons/credit.png"; // Credit icon
-import Debit from "../assets/icons/debit.png"; // Debit icon
-import Total from "../assets/icons/total.png"; // Total icon
 import NavBar from "./nav-bar/NavBar"; // Navigation bar component
 import { useState, useEffect } from "react"; // React hooks for state and lifecycle management
+import { showMessageBox } from "./modal/messageBoxService";
 import {
   GetMonthName,
   GetYearName,
@@ -192,13 +189,21 @@ const AccountingApp = () => {
   const handleDeleteEntry = async (id) => {
     console.log(id);
     try {
-      const url = `${process.env.REACT_APP_BACKEND_URL}/data/${id}`; // API endpoint for deletion
+      // Show confirmation message box and await user response
+      const response = await showMessageBox("Confirmation", "Do you want to proceed?", [
+        { label: "Yes", value: true },
+        { label: "No", value: false },
+      ]);
 
-      await makeRequest(HttpMethod.DELETE, url); // Make DELETE request
-      console.log("Data deleted successfully");
+      if (response) {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/data/${id}`; // API endpoint for deletion
 
-      // Fetch updated data after deletion
-      fetchData();
+        await makeRequest(HttpMethod.DELETE, url); // Make DELETE request
+        console.log("Data deleted successfully");
+
+        // Fetch updated data after deletion
+        fetchData();
+      }
     } catch (error) {
       console.error("Error deleting data:", error);
       alert("Failed to delete data. Please try again.");

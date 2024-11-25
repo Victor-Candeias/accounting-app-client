@@ -54,7 +54,7 @@ const Data = ({ data, onDeleteEntry }) => {
             data.map((m) => (
               <tr key={m._id}>
                 <td className={classes.td}>
-                  {m.day}-{numberToMonth(m.month)}-{m.year}
+                  {m.day}-{m.month}-{m.year}
                 </td>
                 <td className={classes.td}>{m.description}</td>
                 <td className={classes.td} style={{ textAlign: "right" }}>
@@ -68,8 +68,8 @@ const Data = ({ data, onDeleteEntry }) => {
                     className={classes["align-center"]}
                     src={m.entry === "credit" ? CreditIcon : DebitIcon}
                     alt={m.entry === "credit" ? "Credit entry" : "Debit entry"}
-                    width={25}
-                    height={25}
+                    width={20}
+                    height={20}
                   />
                 </td>
                 <td className={classes.td} id={m._id}>
@@ -77,7 +77,7 @@ const Data = ({ data, onDeleteEntry }) => {
                     onClick={() => handleDelete(m._id)}
                     aria-label="Delete entry"
                   >
-                    <img src={Delete} alt="Delete" width={25} height={25} />
+                    <img src={Delete} alt="Delete" width={20} height={20} />
                   </button>
                 </td>
               </tr>

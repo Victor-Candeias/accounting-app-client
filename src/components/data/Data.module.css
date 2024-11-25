@@ -9,10 +9,16 @@
     width: 100%;
     border-collapse: collapse;
 }
+
+.td {    
+    text-align: center; /* Center horizontally */
+    vertical-align: middle; /* Center vertically */
+}
+
 .td, .th {
-    width: 25%;
-    border: 1px lightgray solid;
-    border-radius: 5px;
+    width: auto; /* Let the content define the width */
+    max-width: 100px; /* Optional: prevent excessively wide cells */
+    word-wrap: break-word; /* Prevent text from overflowing */
 }
 
 .th {
@@ -23,6 +29,8 @@
 }
 
 .align-center {
-    align-content: center;
-    margin-left: 50px;
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    margin: 0; /* Remove the problematic margin */
 }
